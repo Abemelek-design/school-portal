@@ -82,6 +82,7 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
 /* Top Nav Bar (Phase 3) */
 .top-nav-bar { height: var(--topbar-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; position: sticky; top: 0; z-index: 15; }
 .top-nav-left { flex: 1; display: flex; align-items: center; }
+.mobile-menu-btn { display: none; margin-right: 1rem; }
 .top-nav-right { display: flex; align-items: center; gap: 1rem; }
 .top-nav-bar .search-bar-wrapper { width: 100%; max-width: 400px; }
 
@@ -246,10 +247,17 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
 
 /* Responsive */
 @media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); }
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s; box-shadow: var(--shadow-lg); }
+  .sidebar.open { transform: translateX(0); }
   .main-content { margin-left: 0 !important; }
   .payment-layout { grid-template-columns: 1fr; }
   .view { padding: 1.5rem 1rem; }
   .student-profile-header { flex-direction: column; text-align: center; }
   .sph-meta { flex-direction: column; }
+  .mobile-menu-btn { display: flex; }
+  .top-nav-bar { padding: 0 1rem; }
+  .search-bar-wrapper input { width: 140px; }
+  .search-bar-wrapper:focus-within input { width: 100%; position: absolute; top: -20px; left: 0; z-index: 50; }
+  .card-body.p-0 { overflow-x: auto; }
+  .metrics-grid { grid-template-columns: 1fr; gap: 1rem; }
 }
