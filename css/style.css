@@ -16,7 +16,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { overflow-x: hidden; width: 100%; max-width: 100vw; }
+html, body { overflow-x: hidden; max-width: 100vw; }
 body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; font-size: 14px; }
 
 /* Utils */
@@ -55,7 +55,7 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
 .search-bar-wrapper input { width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; }
 
 /* Layout */
-.app-container { display: flex; min-height: 100vh; }
+.app-container { display: flex; min-height: 100vh; overflow-x: hidden; width: 100%; }
 .sidebar { width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 20; }
 .sidebar-header { padding: 1.5rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border); }
 .logo-box { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; }
@@ -250,18 +250,22 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
 @media (max-width: 768px) {
   .sidebar { transform: translateX(-100%); transition: transform 0.3s; box-shadow: var(--shadow-lg); }
   .sidebar.open { transform: translateX(0); }
-  .main-content { margin-left: 0 !important; }
+  .main-content { margin-left: 0 !important; width: 100%; max-width: 100vw; }
   .payment-layout { grid-template-columns: 1fr; }
-  .view { padding: 1.5rem 1rem; }
+  .view { padding: 1.2rem 0.8rem; }
   .student-profile-header { flex-direction: column; text-align: center; }
   .sph-meta { flex-direction: column; }
   .mobile-menu-btn { display: flex; }
-  .top-nav-bar { padding: 0 1rem; }
-  .search-bar-wrapper input { width: 140px; }
-  .search-bar-wrapper:focus-within input { width: 100%; position: absolute; top: -20px; left: 0; z-index: 50; }
-  .card-body.p-0 { overflow-x: auto; }
+  .top-nav-bar { padding: 0 0.75rem; }
+  .top-nav-bar .search-bar-wrapper { max-width: 160px; }
+  .card-body.p-0, .card { overflow-x: hidden; }
   .metrics-grid { grid-template-columns: 1fr; gap: 1rem; }
   .departments-grid, .library-grid, .quick-access-grid { grid-template-columns: 1fr; }
   .notif-dropdown { width: 300px; right: -10px; }
-  .login-card { padding: 2rem; }
+  .login-card { padding: 2rem 1.5rem; }
+  .dashboard-grid-layout { grid-template-columns: 1fr; }
+  .font-mono { letter-spacing: 0; font-size: 11px; }
+  .table th, .table td { padding: 0.75rem 0.75rem; }
+  .page-title { font-size: 1.2rem; }
+  .detail-grid { grid-template-columns: 1fr !important; }
 }
