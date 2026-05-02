@@ -109,6 +109,25 @@
 
       <!-- STUDENT DASHBOARD VIEW -->
       <section id="student-dashboard-view" class="view hidden">
+        
+        <!-- Quick Access (first) -->
+        <h2 class="mb-3" style="text-transform:uppercase; font-size:12px; letter-spacing:1px; color:var(--text-muted);">Quick Access</h2>
+        <div class="quick-access-grid mb-6">
+          <button class="qa-card" onclick="app.navigate('student-courses')">
+            <div class="qa-icon blue"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><h3>Courses</h3>
+          </button>
+          <button class="qa-card" onclick="app.navigate('student-grades')">
+            <div class="qa-icon purple"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>Grades</h3>
+          </button>
+          <button class="qa-card" onclick="app.navigate('student-library')">
+            <div class="qa-icon orange"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><h3>Library</h3>
+          </button>
+          <button class="qa-card" onclick="app.navigate('student-payment')">
+            <div class="qa-icon green"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>Payments</h3>
+          </button>
+        </div>
+
+        <!-- KPI Metrics -->
         <div class="metrics-grid mb-6">
           <div class="metric-card"><div class="metric-icon blue"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="metric-info"><h3>Current GPA</h3><p class="metric-value" id="dash-gpa">--</p></div></div>
           <div class="metric-card"><div class="metric-icon purple"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="metric-info"><h3>CGPA (Overall)</h3><p class="metric-value" id="dash-cgpa">--</p></div></div>
@@ -118,24 +137,19 @@
 
         <div class="dashboard-grid-layout">
           <div class="dashboard-main-col">
-            <!-- Agenda -->
-            <div class="card mb-6">
-              <div class="card-header flex-between"><h2>Upcoming Agenda</h2><span class="badge badge-info">Next 14 Days</span></div>
-              <div class="card-body p-0"><div class="agenda-list" id="agenda-list"></div></div>
-            </div>
             <!-- Calendar -->
             <div class="card mb-6">
               <div class="card-header flex-between">
                 <h2>Academic Calendar</h2>
                 <div class="calendar-controls">
                   <button class="icon-btn sm" id="cal-prev"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
-                  <span id="cal-month-year" class="fw-bold" style="font-size:14px; min-width: 120px; text-align:center;">May 2026</span>
+                  <span id="cal-month-year" class="fw-bold" style="font-size:14px; min-width: 100px; text-align:center;">May 2026</span>
                   <button class="icon-btn sm" id="cal-next"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
                 </div>
               </div>
               <div class="card-body p-0">
                 <div class="calendar-grid">
-                  <div class="cal-days-header"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+                  <div class="cal-days-header"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>
                   <div class="cal-days-body" id="cal-days-body"></div>
                 </div>
                 <div class="calendar-legend">
@@ -146,22 +160,11 @@
               </div>
             </div>
           </div>
-          <!-- Quick Access -->
+          <!-- Agenda -->
           <div class="dashboard-side-col">
-            <h2 class="mb-4 text-muted" style="text-transform:uppercase; font-size:12px; letter-spacing:1px">Quick Access</h2>
-            <div class="quick-access-grid">
-              <button class="qa-card" onclick="app.navigate('student-courses')">
-                <div class="qa-icon blue"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><h3>Courses</h3>
-              </button>
-              <button class="qa-card" onclick="app.navigate('student-grades')">
-                <div class="qa-icon purple"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>Grades</h3>
-              </button>
-              <button class="qa-card" onclick="app.navigate('student-library')">
-                <div class="qa-icon orange"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><h3>Library</h3>
-              </button>
-              <button class="qa-card" onclick="app.navigate('student-payment')">
-                <div class="qa-icon green"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>Payments</h3>
-              </button>
+            <div class="card">
+              <div class="card-header flex-between"><h2>Upcoming Agenda</h2><span class="badge badge-info">Next 14 Days</span></div>
+              <div class="card-body p-0"><div class="agenda-list" id="agenda-list"></div></div>
             </div>
           </div>
         </div>

@@ -268,4 +268,10 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
   .table th, .table td { padding: 0.75rem 0.75rem; }
   .page-title { font-size: 1.2rem; }
   .detail-grid { grid-template-columns: 1fr !important; }
+  /* Calendar mobile */
+  .cal-day { padding: 2px; aspect-ratio: unset; min-height: 38px; }
+  .day-num { font-size: 11px; }
+  .cal-event-label { font-size: 7px; padding: 1px 2px; }
+  .cal-days-header { font-size: 10px; }
+  .quick-access-grid { grid-template-columns: 1fr 1fr; }
 }
