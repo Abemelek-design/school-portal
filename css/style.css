@@ -260,4 +260,7 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); colo
   .search-bar-wrapper:focus-within input { width: 100%; position: absolute; top: -20px; left: 0; z-index: 50; }
   .card-body.p-0 { overflow-x: auto; }
   .metrics-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .departments-grid, .library-grid, .quick-access-grid { grid-template-columns: 1fr; }
+  .notif-dropdown { width: 300px; right: -10px; }
+  .login-card { padding: 2rem; }
 }
