@@ -258,6 +258,9 @@ const app = {
 
     this.currentView = viewId;
     this.renderView(viewId);
+    // Auto-close mobile sidebar after navigating
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) sidebar.classList.remove('open');
   },
 
   setupHeader() {
