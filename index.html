@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div id="app-container" class="app-container">
+    
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar hidden">
+      <div class="sidebar-header">
+        <div class="logo-box">UNI</div>
+        <h2 class="brand">UniPortal</h2>
+      </div>
+      <nav id="nav-menu" class="nav-menu"></nav>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn-ghost btn-block">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+      
+      <!-- TOP NAVIGATION BAR (Phase 3) -->
+      <header id="top-nav-bar" class="top-nav-bar hidden">
+        <div class="top-nav-left">
+          <div id="admin-global-search-container" class="search-bar-wrapper hidden">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="admin-global-search" placeholder="Search student name, ID, transaction ID, department...">
+            <div id="search-results-dropdown" class="search-results-dropdown hidden"></div>
+          </div>
+        </div>
+        
+        <div class="top-nav-right">
+          <!-- Notifications System -->
+          <div class="notification-container" id="notification-container">
+            <button class="icon-btn" id="notif-btn">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="notif-badge hidden" id="notif-badge">0</span>
+            </button>
+            <div class="notif-dropdown hidden" id="notif-dropdown">
+              <div class="notif-header">
+                <h3>Notifications</h3>
+                <button class="btn-text" id="mark-all-read-btn">Mark all as read</button>
+              </div>
+              <div class="notif-filters">
+                <button class="notif-filter active" data-category="all">All</button>
+                <button class="notif-filter" data-category="academic">Academic</button>
+                <button class="notif-filter" data-category="payments">Payments</button>
+                <button class="notif-filter" data-category="system">System</button>
+              </div>
+              <div class="notif-list" id="notif-list">
+                <!-- JS populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- LOGIN VIEW -->
+      <section id="login-view" class="view active">
+        <div class="login-wrapper">
+          <div class="login-card">
+            <div class="login-header">
+              <div class="logo-box lg mx-auto">UNI</div>
+              <h1>Welcome Back</h1>
+              <p>Enter your credentials to access your portal</p>
+            </div>
+            <form id="login-form" class="form">
+              <div class="form-group"><label>Email Address</label><input type="email" id="email" required></div>
+              <div class="form-group"><label>Password</label><input type="password" id="password" required></div>
+              <div class="form-group flex-between" style="margin-bottom: 1.5rem;">
+                <label style="display:flex; align-items:center; gap:0.5rem; margin:0; cursor:pointer; font-weight:normal; font-size:13px;">
+                  <input type="checkbox" id="remember-me" style="width:auto; margin:0;"> Remember Me
+                </label>
+              </div>
+              <div class="form-footer">
+                <p class="demo-hint">Demo: student@demo.com / admin@demo.com (pass: demo123)</p>
+                <button type="submit" class="btn-primary btn-block">Sign In</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- STUDENT PROFILE HEADER -->
+      <div id="student-profile-header" class="student-profile-header hidden">
+        <img id="sph-avatar" src="" alt="Profile" class="sph-avatar">
+        <div class="sph-info">
+          <h2 id="sph-name">Student Name</h2>
+          <div class="sph-meta">
+            <span id="sph-id" class="badge badge-info">ID</span>
+            <span id="sph-program">Program - Year</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDENT DASHBOARD VIEW -->
+      <section id="student-dashboard-view" class="view hidden">
+        <div class="metrics-grid mb-6">
+          <div class="metric-card"><div class="metric-icon blue"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="metric-info"><h3>Current GPA</h3><p class="metric-value" id="dash-gpa">--</p></div></div>
+          <div class="metric-card"><div class="metric-icon purple"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="metric-info"><h3>CGPA (Overall)</h3><p class="metric-value" id="dash-cgpa">--</p></div></div>
+          <div class="metric-card"><div class="metric-icon green"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="metric-info"><h3>Payment Status</h3><p class="metric-value status-badge" id="dash-payment-status" style="font-size:16px;">--</p></div></div>
+          <div class="metric-card"><div class="metric-icon orange"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="metric-info"><h3>Active Courses</h3><p class="metric-value" id="dash-active-courses">0</p></div></div>
+        </div>
+
+        <div class="dashboard-grid-layout">
+          <div class="dashboard-main-col">
+            <!-- Agenda -->
+            <div class="card mb-6">
+              <div class="card-header flex-between"><h2>Upcoming Agenda</h2><span class="badge badge-info">Next 14 Days</span></div>
+              <div class="card-body p-0"><div class="agenda-list" id="agenda-list"></div></div>
+            </div>
+            <!-- Calendar -->
+            <div class="card mb-6">
+              <div class="card-header flex-between">
+                <h2>Academic Calendar</h2>
+                <div class="calendar-controls">
+                  <button class="icon-btn sm" id="cal-prev"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+                  <span id="cal-month-year" class="fw-bold" style="font-size:14px; min-width: 120px; text-align:center;">May 2026</span>
+                  <button class="icon-btn sm" id="cal-next"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+                </div>
+              </div>
+              <div class="card-body p-0">
+                <div class="calendar-grid">
+                  <div class="cal-days-header"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+                  <div class="cal-days-body" id="cal-days-body"></div>
+                </div>
+                <div class="calendar-legend">
+                  <div class="legend-item"><span class="dot exam"></span> Exam</div>
+                  <div class="legend-item"><span class="dot deadline"></span> Deadline</div>
+                  <div class="legend-item"><span class="dot holiday"></span> Holiday</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Quick Access -->
+          <div class="dashboard-side-col">
+            <h2 class="mb-4 text-muted" style="text-transform:uppercase; font-size:12px; letter-spacing:1px">Quick Access</h2>
+            <div class="quick-access-grid">
+              <button class="qa-card" onclick="app.navigate('student-courses')">
+                <div class="qa-icon blue"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><h3>Courses</h3>
+              </button>
+              <button class="qa-card" onclick="app.navigate('student-grades')">
+                <div class="qa-icon purple"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>Grades</h3>
+              </button>
+              <button class="qa-card" onclick="app.navigate('student-library')">
+                <div class="qa-icon orange"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><h3>Library</h3>
+              </button>
+              <button class="qa-card" onclick="app.navigate('student-payment')">
+                <div class="qa-icon green"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>Payments</h3>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STUDENT COURSES VIEW -->
+      <section id="student-courses-view" class="view hidden">
+        <div class="academic-context-header card mb-6">
+          <div class="card-body flex-between">
+            <div><div class="text-muted" style="font-size:12px; text-transform:uppercase; letter-spacing:1px">Current Semester Context</div><h2 id="scv-program" style="margin-top:4px;">Program Name</h2></div>
+            <div class="text-right"><div class="fw-bold text-primary" id="scv-year" style="font-size:18px;">Year X</div><div class="text-muted" id="scv-sem">Semester X</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header flex-between">
+            <h2>Course Directory</h2>
+            <select id="course-filter" class="select-sm"><option value="all">All Courses</option><option value="enrolled">Enrolled</option><option value="completed">Completed</option></select>
+          </div>
+          <div class="card-body p-0">
+            <table class="table full-width">
+              <thead><tr><th>Course Info</th><th>Credits</th><th>Status</th><th class="text-right">Action</th></tr></thead>
+              <tbody id="student-courses-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- STUDENT GRADES VIEW -->
+      <section id="student-grades-view" class="view hidden">
+        <h1 class="page-title mb-6">Academic Transcript</h1>
+        <div class="card"><div class="card-body text-center" style="padding: 4rem 2rem;">
+            <svg width="48" height="48" fill="none" stroke="var(--secondary)" stroke-width="1.5" viewBox="0 0 24 24" class="mx-auto mb-4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <h2 class="text-muted">Transcript records are being compiled.</h2>
+        </div></div>
+      </section>
+
+      <!-- STUDENT LIBRARY VIEW -->
+      <section id="student-library-view" class="view hidden">
+        <h1 class="page-title mb-4">Digital Library</h1>
+        <div class="library-toolbar flex-between mb-6 gap-4">
+          <div class="search-bar-wrapper flex-1">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="lib-search" placeholder="Search materials...">
+          </div>
+          <select id="lib-filter" class="select-sm" style="min-width: 180px;">
+            <option value="all">All Categories</option><option value="Lecture notes">Lecture notes</option><option value="PDFs">PDFs</option><option value="Assignments">Assignments</option><option value="Reference materials">Reference materials</option>
+          </select>
+        </div>
+        <div class="library-grid" id="library-grid"></div>
+      </section>
+
+      <!-- STUDENT PAYMENT VIEW -->
+      <section id="student-payment-view" class="view hidden">
+        <header class="view-header"><div><h1 class="page-title">Fee Payment</h1><p class="page-subtitle">Submit bank transfer receipt for verification</p></div></header>
+        <div class="payment-layout">
+          <div class="payment-instructions card">
+            <div class="card-header"><h2>1. Payment Instructions</h2></div>
+            <div class="card-body">
+              <div class="bank-details-box">
+                <div class="detail-row"><span class="label">Bank Name:</span><span class="val fw-bold">CBE</span></div>
+                <div class="detail-row"><span class="label">Account No:</span><span class="val fw-bold font-mono">1000284739284</span></div>
+                <div class="divider"></div>
+                <div class="detail-row highlight"><span class="label">Ref Code:</span><span class="val fw-bold text-primary font-mono" id="payment-ref-code">---</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="payment-submission card">
+            <div class="card-header"><h2>2. Submit Receipt</h2></div>
+            <div class="card-body">
+              <form id="payment-form" class="form">
+                <div class="form-group"><label>Payment Type</label><select id="pay-type"><option value="tuition">Tuition Fee</option><option value="semester">Registration Fee</option></select></div>
+                <div class="form-group"><label>Transaction ID</label><input type="text" id="tx-id" required></div>
+                <div class="form-group"><label>Amount Transferred (ETB)</label><input type="number" id="pay-amount" required></div>
+                <div class="form-group">
+                  <label>Upload Receipt</label>
+                  <div class="file-upload-box" id="file-upload-box"><input type="file" id="receipt-file" accept="image/*" class="hidden-input" required><p>Click to select</p></div>
+                  <div id="file-preview" class="file-preview hidden"></div>
+                </div>
+                <button type="submit" class="btn-primary btn-block">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-6">
+          <div class="card-header"><h2>Payment History</h2></div>
+          <div class="card-body p-0">
+            <table class="table full-width">
+              <thead><tr><th>Date</th><th>Type</th><th>Transaction ID</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody id="student-payment-history"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- STUDENT SETTINGS VIEW -->
+      <section id="student-settings-view" class="view hidden">
+        <h1 class="page-title mb-6">Account Settings</h1>
+        <div class="card max-w-md"><div class="card-body text-center" style="padding: 4rem 2rem;">
+            <svg width="48" height="48" fill="none" stroke="var(--secondary)" stroke-width="1.5" viewBox="0 0 24 24" class="mx-auto mb-4"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <h2 class="text-muted">Settings are locked</h2>
+        </div></div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- ADMIN VIEWS                                    -->
+      <!-- ============================================== -->
+
+      <!-- ADMIN DASHBOARD VIEW (KPI Only) -->
+      <section id="admin-dashboard-view" class="view hidden">
+        <h1 class="page-title mb-6">Institution Overview</h1>
+        <div class="metrics-grid mb-8">
+          <div class="metric-card clickable" onclick="app.navigate('admin-students')"><div class="metric-icon purple"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg></div><div class="metric-info"><h3>Total Students</h3><p class="metric-value" id="admin-total-students">0</p></div></div>
+          <div class="metric-card clickable" onclick="app.navigateToPayments('Pending Approval')"><div class="metric-icon orange"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></div><div class="metric-info"><h3>Pending Verification</h3><p class="metric-value" id="admin-pending-payments">0</p></div></div>
+          <div class="metric-card clickable" onclick="app.navigateToPayments('Paid')"><div class="metric-icon green"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4L12 14.01l-3-3"/></svg></div><div class="metric-info"><h3>Approved Payments</h3><p class="metric-value" id="admin-approved-payments">0</p></div></div>
+          <div class="metric-card clickable" onclick="app.navigateToPayments('Rejected')"><div class="metric-icon danger"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg></div><div class="metric-info"><h3>Rejected Payments</h3><p class="metric-value" id="admin-rejected-payments">0</p></div></div>
+        </div>
+        <div class="dashboard-grid-layout">
+          <div class="dashboard-main-col">
+            <div class="card mb-6">
+              <div class="card-header flex-between">
+                <h2>Administrative Schedule</h2>
+                <div class="calendar-controls">
+                  <button class="icon-btn sm" id="admin-cal-prev"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+                  <span id="admin-cal-month-year" class="fw-bold" style="font-size:14px; min-width: 120px; text-align:center;">May 2026</span>
+                  <button class="icon-btn sm" id="admin-cal-next"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+                </div>
+              </div>
+              <div class="card-body p-0">
+                <div class="calendar-grid">
+                  <div class="cal-days-header"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+                  <div class="cal-days-body" id="admin-cal-days-body"></div>
+                </div>
+                <div class="calendar-legend">
+                  <div class="legend-item"><span class="dot exam"></span> Exams</div>
+                  <div class="legend-item"><span class="dot deadline"></span> Deadlines</div>
+                  <div class="legend-item"><span class="dot holiday"></span> Holidays / System</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-side-col">
+            <div class="card">
+              <div class="card-header"><h2>Upcoming Events</h2></div>
+              <div class="card-body p-0"><div class="agenda-list" id="admin-agenda-list"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADMIN PROGRAMS VIEW (Level 1) -->
+      <section id="admin-programs-view" class="view hidden">
+        <h1 class="page-title mb-6">Programs & Departments</h1>
+        <div id="admin-programs-grid" class="departments-grid"></div>
+      </section>
+
+      <!-- ADMIN DEPARTMENTS VIEW (Level 2) -->
+      <section id="admin-departments-view" class="view hidden">
+        <div class="view-header"><div><button class="btn-ghost btn-sm mb-2" onclick="app.navigate('admin-programs')">← Back to Programs</button><h1 class="page-title" id="adv-title">Program Name</h1><p class="page-subtitle">Select a department to view students</p></div></div>
+        <div id="admin-dept-grid" class="departments-grid"></div>
+      </section>
+
+      <!-- ADMIN PROGRAM STUDENTS VIEW (Level 3) -->
+      <section id="admin-program-students-view" class="view hidden">
+        <div class="view-header"><div><button class="btn-ghost btn-sm mb-2" onclick="app.navigate('admin-departments')">← Back to Departments</button><h1 class="page-title" id="aps-title">Department Name</h1><p class="page-subtitle" id="aps-subtitle">Program Group</p></div></div>
+        <div class="card"><div class="card-body p-0">
+            <table class="table full-width align-middle">
+              <thead><tr><th>Student Info</th><th>ID</th><th>Payment Status</th><th>Academic Status</th><th class="text-right">Action</th></tr></thead>
+              <tbody id="aps-table"></tbody>
+            </table>
+        </div></div>
+      </section>
+
+      <!-- ADMIN STUDENT DETAIL VIEW -->
+      <section id="admin-student-detail-view" class="view hidden">
+        <div class="view-header"><div><button class="btn-ghost btn-sm mb-2" onclick="app.goBackFromStudentDetail()">← Back</button><h1 class="page-title">Student Profile</h1></div></div>
+        <div class="student-profile-header card mb-6" style="padding: 1.5rem; display: flex; align-items: center; gap: 1.5rem; background: var(--surface);">
+          <img id="asd-avatar" src="" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+          <div style="flex: 1;"><h2 id="asd-name" style="font-size: 1.5rem;">Student Name</h2><div style="display: flex; gap: 1rem; margin-top: 0.5rem;"><span id="asd-id" class="badge badge-info">ID</span><span id="asd-program" class="text-muted">Program - Year</span><span id="asd-status" class="badge">Status</span></div></div>
+        </div>
+        <div class="detail-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem;">
+          <div class="card"><div class="card-header"><h2>Grade Summary</h2></div><div class="card-body"><div class="detail-row"><span class="label">Semester GPA:</span><span class="val fw-bold" id="asd-gpa">--</span></div><div class="detail-row"><span class="label">CGPA:</span><span class="val fw-bold" id="asd-cgpa">--</span></div></div></div>
+          <div class="card"><div class="card-header"><h2>Course Enrollment</h2></div><div class="card-body p-0"><table class="table full-width"><thead><tr><th>Course Name</th><th>Credits</th><th>Status</th></tr></thead><tbody id="asd-courses"></tbody></table></div></div>
+          <div class="card" style="grid-column: 1 / -1;"><div class="card-header"><h2>Payment History</h2></div><div class="card-body p-0"><table class="table full-width align-middle"><thead><tr><th>Date</th><th>Type</th><th>Transaction ID</th><th>Amount</th><th>Status / Flags</th></tr></thead><tbody id="asd-payments"></tbody></table></div></div>
+        </div>
+      </section>
+
+      <!-- ADMIN STUDENTS GLOBAL VIEW -->
+      <section id="admin-students-view" class="view hidden">
+        <h1 class="page-title mb-6">Global Student Directory</h1>
+        <div class="card">
+          <div class="card-header flex-between">
+            <div class="search-bar-wrapper" style="width:300px;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="admin-student-search" placeholder="Search by name or ID..."></div>
+            <select id="admin-student-filter" class="select-sm"><option value="all">All Programs</option></select>
+          </div>
+          <div class="card-body p-0">
+            <table class="table full-width align-middle">
+              <thead><tr><th>Student Info</th><th>ID</th><th>Program / Department</th><th>Payment Status</th><th class="text-right">Action</th></tr></thead>
+              <tbody id="admin-students-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ADMIN NOTIFICATIONS VIEW -->
+      <section id="admin-notifications-view" class="view hidden">
+        <h1 class="page-title mb-6">Notifications Center</h1>
+        <div class="card max-w-md"><div class="card-body text-center" style="padding: 4rem 2rem;"><svg width="48" height="48" fill="none" stroke="var(--secondary)" stroke-width="1.5" viewBox="0 0 24 24" class="mx-auto mb-4"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><h2 class="text-muted">Use the top bar bell icon to access notifications.</h2></div></div>
+      </section>
+
+      <!-- ADMIN SETTINGS VIEW -->
+      <section id="admin-settings-view" class="view hidden">
+        <h1 class="page-title mb-6">Portal Settings</h1>
+        <div class="card max-w-md"><div class="card-body text-center" style="padding: 4rem 2rem;"><svg width="48" height="48" fill="none" stroke="var(--secondary)" stroke-width="1.5" viewBox="0 0 24 24" class="mx-auto mb-4"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><h2 class="text-muted">Settings are locked</h2></div></div>
+      </section>
+
+      <!-- ADMIN PAYMENTS CENTER VIEW -->
+      <section id="admin-payments-view" class="view hidden">
+        <h1 class="page-title mb-6">Payment Verification Center</h1>
+        <div class="card">
+          <div class="card-header flex-between" style="flex-wrap: wrap; gap: 1rem;">
+            <h2>Verification Queue</h2>
+            <div class="filters" style="display: flex; gap: 0.5rem;">
+              <select id="admin-filter-dept" class="select-sm"><option value="all">All Departments</option></select>
+              <select id="admin-filter-status" class="select-sm"><option value="all">All Statuses</option><option value="Pending Approval">Pending</option><option value="Needs Review">Needs Review</option><option value="High Risk">High Risk</option><option value="Paid">Approved</option><option value="Rejected">Rejected</option></select>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table full-width align-middle">
+                <thead><tr><th>Student</th><th>Ref / TX ID</th><th>Expected</th><th>Submitted</th><th>Status / Flags</th><th>Receipt</th><th class="text-right">Actions</th></tr></thead>
+                <tbody id="admin-payments-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+  <div id="image-modal" class="modal hidden" style="z-index: 1000;"><div class="modal-content"><span class="close-modal">&times;</span><img id="modal-image" src="" alt="Receipt Preview"></div></div>
+
+  <!-- PAYMENT DETAIL MODAL -->
+  <div id="payment-detail-modal" class="modal hidden" style="z-index: 999;">
+    <div class="modal-content" style="max-width: 600px; padding: 2rem; background: var(--surface); border-radius: var(--radius); overflow-y: auto; max-height: 95vh;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:1.5rem;">
+        <h2 style="margin:0;">Payment Verification Details</h2>
+        <span class="close-modal" style="position:static; margin:0; color:var(--text-main); font-size:24px; cursor:pointer;" onclick="document.getElementById('payment-detail-modal').classList.add('hidden')">&times;</span>
+      </div>
+      <div id="pdm-body"></div>
+    </div>
+  </div>
+
+  <script src="js/mockData.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
