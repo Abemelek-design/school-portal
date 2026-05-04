@@ -105,7 +105,7 @@ const AppStore = {
 const app = {
   currentView: 'login',
   activeAdminDept: null,
-  currentDate: new Date('2026-05-03'), // Mocked "Today" for demo
+  currentDate: new Date('2026-05-10'), // Mocked "Today" for demo (after deadline to show late fee)
   calendarMonth: new Date('2026-05-01'),
 
   init() {
@@ -352,7 +352,19 @@ const app = {
     if (viewId === 'student-dashboard') { this.renderStudentDashboard(); this.renderCalendar(); this.renderAgenda(); }
     if (viewId === 'student-courses') this.renderStudentCourses();
     if (viewId === 'student-library') this.renderLibrary();
-    if (viewId === 'student-payment') this.renderStudentPaymentView();
+    if (viewId === 'student-payment') {
+      // Reset bank selector on each visit
+      const bankSel = document.getElementById('bank-selector');
+      if (bankSel) {
+        bankSel.value = '';
+        bankSel.style.borderColor = '';
+      }
+      const panel = document.getElementById('bank-details-panel');
+      const ph = document.getElementById('bank-select-placeholder');
+      if (panel) panel.classList.add('hidden');
+      if (ph) ph.style.display = 'block';
+      this.renderStudentPaymentView();
+    }
     if (viewId === 'admin-dashboard') { this.renderAdminDashboard(); this.renderAdminCalendar(); this.renderAdminAgenda(); }
     if (viewId === 'admin-programs') this.renderAdminPrograms();
     if (viewId === 'admin-students') this.renderAdminStudentsGlobal();
@@ -514,15 +526,128 @@ const app = {
   },
   mockDownload(title) { this.showToast(`Downloading: ${title}`, "success"); },
 
+  // Bank account info per bank
+  bankInfo: {
+    'CBE': {
+      name: 'Commercial Bank of Ethiopia (CBE)',
+      accountName: 'Atomic University Finance Office',
+      accountNo: '1000284739284'
+    },
+    'Amhara Bank': {
+      name: 'Amhara Bank',
+      accountName: 'Atomic University Finance Office',
+      accountNo: '2100938475610'
+    },
+    'Awash Bank': {
+      name: 'Awash Bank',
+      accountName: 'Atomic University Finance Office',
+      accountNo: '0132847592016'
+    },
+    'Coop': {
+      name: 'Cooperative Bank of Oromia (Coop)',
+      accountName: 'Atomic University Finance Office',
+      accountNo: '3200748291034'
+    },
+    'Oromia Bank': {
+      name: 'Oromia Bank',
+      accountName: 'Atomic University Finance Office',
+      accountNo: '4019283746510'
+    }
+  },
+
+  getLateFeeInfo() {
+    // Deadline is the first 'deadline' type event in the calendar
+    const deadlineEvent = AppStore.data.calendarEvents.find(e => e.type === 'deadline' && e.title.toLowerCase().includes('tuition'));
+    if (!deadlineEvent) return { isLate: false, daysLate: 0, lateFee: 0, totalDue: 15000 };
+
+    const deadline = new Date(deadlineEvent.date);
+    const today = this.currentDate;
+    // Compare date only (strip time)
+    deadline.setHours(0, 0, 0, 0);
+    const todayMidnight = new Date(today);
+    todayMidnight.setHours(0, 0, 0, 0);
+
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const daysLate = Math.max(0, Math.floor((todayMidnight - deadline) / msPerDay));
+    const lateFee = daysLate * 50;
+    const totalDue = 15000 + lateFee;
+    return { isLate: daysLate > 0, daysLate, lateFee, totalDue, deadlineDate: deadlineEvent.date };
+  },
+
   renderStudentPaymentView() {
-    document.getElementById('payment-ref-code').innerText = AppStore.currentUser.referenceCode;
+    // Late fee calculation
+    const { isLate, daysLate, lateFee, totalDue, deadlineDate } = this.getLateFeeInfo();
+    const banner = document.getElementById('late-fee-banner');
+    const lateText = document.getElementById('late-fee-text');
+    if (isLate) {
+      lateText.innerHTML = `The payment deadline was <strong>${deadlineDate}</strong>. You are <strong>${daysLate} day${daysLate > 1 ? 's' : ''}</strong> late.<br>A late fee of <strong>50 ETB × ${daysLate} = ${lateFee.toLocaleString()} ETB</strong> has been added.<br>Total amount due: <strong style="font-size:15px;">${totalDue.toLocaleString()} ETB</strong>`;
+      banner.classList.remove('hidden');
+      banner.style.display = 'flex';
+    } else {
+      banner.classList.add('hidden');
+      banner.style.display = 'none';
+    }
+
+    // Store totalDue for bank panel
+    this._currentTotalDue = totalDue;
+
+    // Update amount due in bank panel if a bank is already selected
+    const selectedBank = document.getElementById('bank-selector').value;
+    if (selectedBank) this.onBankSelect(selectedBank);
+
+    // Ref code
+    const refEl = document.getElementById('payment-ref-code');
+    if (refEl) refEl.innerText = AppStore.currentUser.referenceCode;
+
+    // Payment history
     const payments = AppStore.getStudentPayments(AppStore.currentUser.id);
     const tbody = document.getElementById('student-payment-history');
     if (payments.length === 0) {
       tbody.innerHTML = `<tr><td colspan="5" class="text-center">No payment history.</td></tr>`;
     } else {
-      tbody.innerHTML = payments.reverse().map(p => `<tr><td>${p.date}</td><td style="text-transform: capitalize">${p.type}</td><td class="font-mono">${p.transactionId}</td><td class="fw-bold">${p.submittedAmount} ETB</td><td><span class="badge ${this.getStatusBadgeClass(p.status)}">${p.status}</span></td></tr>`).join('');
+      tbody.innerHTML = payments.slice().reverse().map(p => `<tr><td>${p.date}</td><td style="text-transform: capitalize">${p.type}</td><td class="font-mono">${p.transactionId}</td><td class="fw-bold">${p.submittedAmount} ETB</td><td><span class="badge ${this.getStatusBadgeClass(p.status)}">${p.status}</span></td></tr>`).join('');
     }
+  },
+
+  onBankSelect(bankKey) {
+    const panel = document.getElementById('bank-details-panel');
+    const placeholder = document.getElementById('bank-select-placeholder');
+    const selector = document.getElementById('bank-selector');
+
+    if (!bankKey) {
+      panel.classList.add('hidden');
+      placeholder.style.display = 'block';
+      return;
+    }
+
+    const info = this.bankInfo[bankKey];
+    if (!info) return;
+
+    document.getElementById('bd-bank-name').innerText = info.name;
+    document.getElementById('bd-account-name').innerText = info.accountName;
+    document.getElementById('bd-account-no').innerText = info.accountNo;
+    document.getElementById('payment-ref-code').innerText = AppStore.currentUser ? AppStore.currentUser.referenceCode : '---';
+
+    const totalDue = this._currentTotalDue || 15000;
+    document.getElementById('bd-amount-due').innerText = totalDue.toLocaleString() + ' ETB';
+
+    // Style amount red if late fee applies
+    const amountEl = document.getElementById('bd-amount-due');
+    if (totalDue > 15000) {
+      amountEl.style.color = '#dc2626';
+      document.getElementById('bd-amount-due').closest('.detail-row').style.background = '#fef2f2';
+      document.getElementById('bd-amount-due').closest('.detail-row').style.borderColor = '#fca5a5';
+    } else {
+      amountEl.style.color = '#15803d';
+      document.getElementById('bd-amount-due').closest('.detail-row').style.background = '#f0fdf4';
+      document.getElementById('bd-amount-due').closest('.detail-row').style.borderColor = '#bbf7d0';
+    }
+
+    // Animate selector border
+    selector.style.borderColor = 'var(--primary)';
+
+    panel.classList.remove('hidden');
+    placeholder.style.display = 'none';
   },
 
   // --- ADMIN METHODS ---
